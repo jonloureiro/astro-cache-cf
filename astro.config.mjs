@@ -12,6 +12,11 @@ export default defineConfig({
                 access: "secret",
                 default: "",
             }),
+            ZONE_ID: envField.string({
+                context: "server",
+                access: "secret",
+                default: "",
+            }),
         },
     },
 });
