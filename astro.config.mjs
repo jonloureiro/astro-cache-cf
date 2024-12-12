@@ -7,7 +7,7 @@ export default defineConfig({
     output: 'server',
     env: {
         schema: {
-            X_AUTH_EMAIL: envField.string({
+            BEARER_TOKEN: envField.string({
                 context: "server",
                 access: "secret",
                 default: "",

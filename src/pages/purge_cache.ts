@@ -1,5 +1,5 @@
 import type {APIRoute} from "astro";
-import {X_AUTH_EMAIL, ZONE_ID} from "astro:env/server";
+import {BEARER_TOKEN, ZONE_ID} from "astro:env/server";
 
 export const POST: APIRoute = async ({request}) => {
     const url = (await request.formData()).get('url')
@@ -9,7 +9,7 @@ export const POST: APIRoute = async ({request}) => {
 
     const options = {
         method: 'POST',
-        headers: {'Content-Type': 'application/json', 'X-Auth-Email': X_AUTH_EMAIL},
+        headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${BEARER_TOKEN}`},
         body: `{"hosts":["${url}"]}`
     };
     const response = await fetch(`https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/purge_cache`, options)
