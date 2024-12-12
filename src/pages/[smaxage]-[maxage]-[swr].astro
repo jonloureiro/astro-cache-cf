@@ -1,0 +1,40 @@
+---
+import isNumber from 'is-number'
+import Layout from "../layout.astro";
+
+function isNumberGreaterThanZero(value: unknown) {
+    return isNumber(value) && (value as number) > 0;
+}
+
+const {smaxage, maxage, swr} = Astro.params;
+
+const smaxageCache = isNumberGreaterThanZero(smaxage) ? `, s-maxage=${smaxage}` : '';
+const maxageCache = isNumberGreaterThanZero(maxage) ? `, max-age=${maxage}` : '';
+const swrCache = isNumberGreaterThanZero(swr) ? `, stale-while-revalidate=${swr}` : '';
+if (smaxageCache || maxageCache) {
+    const cacheValue = `public${smaxageCache}${maxageCache}${swrCache}`
+    Astro.response.headers.set('Cache-Control', cacheValue);
+}
+
+const now = new Date();
+---
+<Layout>
+    <p>{now}</p>
+
+    <form method="post" action="/purge_cache">
+        <input type="hidden" name="url" value={Astro.request.url}/>
+        <button type="submit">Purge Cache</button>
+    </form>
+
+    <script>
+        const form = document.querySelector('form');
+        form?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            await fetch(form.action, {
+                method: form.method,
+                body: formData,
+            });
+        });
+    </script>
+</Layout>
