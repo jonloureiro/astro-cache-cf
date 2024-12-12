@@ -12,9 +12,11 @@ export const POST: APIRoute = async ({request}) => {
         headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${BEARER_TOKEN}`},
         body: `{"hosts":["${url}"]}`
     };
+
     const response = await fetch(`https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/purge_cache`, options)
         .then(response => response.json())
-        .catch(err => console.error(err));
+        .then(data => JSON.stringify(data))
+        .catch(err => JSON.stringify(err));
 
     return new Response(response)
 }
