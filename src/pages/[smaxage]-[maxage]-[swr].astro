@@ -11,14 +11,16 @@ const {smaxage, maxage, swr} = Astro.params;
 const smaxageCache = isNumberGreaterThanZero(smaxage) ? `, s-maxage=${smaxage}` : '';
 const maxageCache = isNumberGreaterThanZero(maxage) ? `, max-age=${maxage}` : '';
 const swrCache = isNumberGreaterThanZero(swr) ? `, stale-while-revalidate=${swr}` : '';
+let cacheValue
 if (smaxageCache || maxageCache) {
-    const cacheValue = `public${smaxageCache}${maxageCache}${swrCache}`
+    cacheValue = `public${smaxageCache}${maxageCache}${swrCache}`
     Astro.response.headers.set('Cache-Control', cacheValue);
 }
 
 const now = new Date();
 ---
 <Layout>
+    <p>{cacheValue}</p>
     <p>{now}</p>
 
     <form method="post" action="/purge_cache">
